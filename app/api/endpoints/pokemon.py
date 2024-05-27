@@ -2,8 +2,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from ...db.database import PokemonDB, get_db_connection
-from ...crud.pokemon_crud import get_pokemons_by_type, get_pokemons_by_trainer_name
-from ...schemas.pokemon import Pokemon
+from ...crud.pokemon_crud import get_pokemons_by_type, get_pokemons_by_trainer_name, create_pokemon
+from ...schemas.pokemon import PokemonCreate
 
 router = APIRouter()
 
@@ -20,3 +20,11 @@ def read_pokemons_by_trainer_name(trainer_name: str, db=Depends(get_db_connectio
     if not pokemons:
         raise HTTPException(status_code=404, detail="No Pokémon found with the given type")
     return pokemons
+
+@router.post("/create-pokemon/", response_model=PokemonCreate, status_code=201)
+def add_pokemon(pokemon_data: PokemonCreate, db: PokemonDB = Depends(get_db_connection)):
+    try:
+        create_pokemon(db, pokemon_data)
+        return pokemon_data
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

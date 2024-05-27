@@ -1,9 +1,18 @@
 # pokemon.py
 from pydantic import BaseModel
+from typing import List
 
-class Pokemon(BaseModel):
+class PokemonBase(BaseModel):
+    id: int
     name: str
-    type: str
+    height: float
+    weight: float
+    types: List[str]
 
+class PokemonCreate(PokemonBase):
+    pass
+
+class Pokemon(PokemonBase):
     class Config:
         orm_mode = True
+        
