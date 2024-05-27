@@ -9,3 +9,12 @@ def get_pokemon_by_type_query():
     JOIN Types ON Pokemon_Types.TypeID = Types.ID
     WHERE Types.Name = %s;
     """
+
+def get_pokemons_by_trainer_name_query():
+    return """
+    SELECT Pokemons.Name
+    FROM Trainers
+    JOIN Ownerships ON Trainers.ID = Ownerships.TrainerID
+    JOIN Pokemons ON Ownerships.PokemonID = Pokemons.ID
+    WHERE Trainers.Name = %s;
+    """
