@@ -1,0 +1,70 @@
+
+---------------------------------------------------------------------------------
+to add pokemon to trainer:
+
+# Define the URI of the FastAPI endpoint
+$uri = "http://localhost:8000/api/v1/trainer/add-pokemon/"
+
+# Create a hashtable for the headers, specifying that the content type is JSON
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
+# Define your JSON payload as a PowerShell object and convert it to a JSON string
+$body = @{
+    trainer_name = "James"
+    pokemon_name = "Pikachu"
+} | ConvertTo-Json
+
+# Send a POST request using Invoke-WebRequest
+$response = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $body
+
+# Output the response status code and any response body
+$response.StatusCode
+$response.Content
+
+---------------------------------------------------------------------------------
+to delete pokemon of trainer:
+# Define the URL of the endpoint
+$url = "http://localhost:8000/api/v1/pokemon/trainer/James/pokemon/Pikachu"
+
+# Send a DELETE request using Invoke-WebRequest
+$response = Invoke-WebRequest -Uri $url -Method 'Delete' -Headers @{ "Content-Type" = "application/json" }
+
+# Output the response status code
+$response.StatusCode
+
+---------------------------------------------------------------------------------
+
+to add pokemon:
+# Define the URI of your FastAPI endpoint       
+$uri = 'http://localhost:8000/api/v1/pokemon/create-pokemon/'
+
+# Create a hashtable for the headers, specifying that the content type is JSON
+$headers = @{
+    'Content-Type' = 'application/json'
+}
+
+# Define your JSON payload as a PowerShell object
+$body = @{
+    id = 152
+    name = 'Pikachu'
+    height = 0.4
+    weight = 6.0
+    types = @('Electric')
+} | ConvertTo-Json  # Convert the object to a JSON string
+
+# Send a POST request
+$response = Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $body
+
+# Output the response from the server
+$response
+
+---------------------------------------------------------------------------------
+
+http://localhost:8000/api/v1/pokemon/by-type/Electric
+
+http://localhost:8000/api/v1/trainer/by-pokemon/pikachu
+
+http://localhost:8000/api/v1/pokemon/by-trainer-name/James
+
