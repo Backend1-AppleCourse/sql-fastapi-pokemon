@@ -18,3 +18,11 @@ def get_pokemons_by_trainer_name_query():
     JOIN Pokemons ON Ownerships.PokemonID = Pokemons.ID
     WHERE Trainers.Name = %s;
     """
+def delete_pokemon_of_trainer_query():
+    return """
+    DELETE Ownerships
+    FROM Ownerships
+    JOIN Trainers ON Ownerships.TrainerID = Trainers.ID
+    JOIN Pokemons ON Ownerships.PokemonID = Pokemons.ID
+    WHERE Trainers.Name = %s AND Pokemons.Name = %s;
+    """

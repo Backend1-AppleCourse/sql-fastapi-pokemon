@@ -2,8 +2,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from ...db.database import PokemonDB, get_db_connection
-from ...crud.trainer_crud import get_trainers_by_pokemon_name
-from ...schemas.trainer import Trainer
+from ...crud.trainer_crud import get_trainers_by_pokemon_name, add_pokemon_to_trainer_by_name
+from ...schemas.trainer import TrainerPokemonRequest, TrainerPokemonResponse  # Assuming you have a schema for this
 
 router = APIRouter()
 
@@ -13,3 +13,17 @@ def read_pokemon_by_type(pokemon_name: str, db=Depends(get_db_connection)):
     if not trainers:
         raise HTTPException(status_code=404, detail="No Pokémon found with the given type")
     return trainers
+
+@router.post("/add-pokemon/", response_model=TrainerPokemonResponse, status_code=201)
+def api_add_pokemon_to_trainer(data: TrainerPokemonRequest, db=Depends(get_db_connection)):
+    try:
+        add_pokemon_to_trainer_by_name(db, data.trainer_name, data.pokemon_name)
+        return {
+            "message": "Pokémon successfully added to trainer",
+            "trainer_name": data.trainer_name,
+            "pokemon_name": data.pokemon_name
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Server error")

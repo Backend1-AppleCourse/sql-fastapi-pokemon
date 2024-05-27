@@ -1,8 +1,10 @@
 from pydantic import BaseModel
 
-class Trainer(BaseModel):
-    name: str
-    town: str
+class TrainerPokemonRequest(BaseModel):
+    trainer_name: str
+    pokemon_name: str
 
-    class Config:
-        orm_mode = True  # If using ORMs, enable orm_mode to treat ORM models as dictionaries
+class TrainerPokemonResponse(BaseModel):
+    message: str
+    trainer_name: str
+    pokemon_name: str

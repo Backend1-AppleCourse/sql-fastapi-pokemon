@@ -15,3 +15,6 @@ def get_pokemons_by_trainer_name(db: PokemonDB, trainer_name: str):
 
 def create_pokemon(db: PokemonDB, pokemon_data: PokemonCreate):
     db.add_pokemon(pokemon_data)
+
+def delete_pokemon_of_trainer(db: PokemonDB, trainer_name: str, pokemon_name: str):
+    db.delete_pokemon_of_trainer(trainer_name, pokemon_name)

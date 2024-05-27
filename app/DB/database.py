@@ -1,7 +1,7 @@
 # database.py
 import pymysql
-from .pokemon_queries import get_pokemon_by_type_query, get_pokemons_by_trainer_name_query
-from .trainer_queries import get_trainers_by_pokemon_name_query
+from .pokemon_queries import get_pokemon_by_type_query, get_pokemons_by_trainer_name_query, delete_pokemon_of_trainer_query
+from .trainer_queries import get_trainers_by_pokemon_name_query, add_pokemon_to_trainer_by_name_query
 from ..schemas.pokemon import PokemonCreate
 
 class PokemonDB:
@@ -36,6 +36,22 @@ class PokemonDB:
                 cursor.execute("INSERT INTO Pokemon_Types (PokemonID, TypeID) SELECT %s, ID FROM Types WHERE Name = %s", 
                                (pokemon_data.id, type_name))
             self.connection.commit()
+
+    def delete_pokemon_of_trainer(self, trainer_name: str, pokemon_name: str):
+        query = delete_pokemon_of_trainer_query()
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, (trainer_name, pokemon_name))
+            self.connection.commit()
+            if cursor.rowcount == 0:
+                raise ValueError("No such ownership exists")
+    
+    def add_pokemon_to_trainer_by_name(self, trainer_name: str, pokemon_name: str):
+        query = add_pokemon_to_trainer_by_name_query()
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, (trainer_name, pokemon_name))
+            self.connection.commit()
+            if cursor.rowcount == 0:
+                raise ValueError("This Pokémon is already assigned to this trainer or the names are incorrect.")
 
 def get_db_connection():
     connection_params = {
