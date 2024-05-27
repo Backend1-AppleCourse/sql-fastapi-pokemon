@@ -1,5 +1,7 @@
 
+# pokemon_crud.py
+from ..db.database import PokemonDB
 
-
-def get_pokemon_by_id():
-    return {""}
+def get_pokemons_by_type(db: PokemonDB, type_name: str):
+    """Retrieve all pokemons by their type."""
+    return db.get_pokemon_by_type(type_name)
