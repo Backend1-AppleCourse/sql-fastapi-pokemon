@@ -11,15 +11,20 @@
 │   │   └── config.py           # Configuration settings
 │   │
 │   ├── /crud                   # CRUD utils (create, read, update, delete)
-│   │   └── crud_pokemon.py     # Pokémon-specific CRUD operations
+│   │   ├── crud_pokemon.py     # Pokémon-specific CRUD operations
+│   │   └── curd_trainer.py     # trainer-specific CRUD operations
 │   │
 │   ├── /db                     # Database-related modules
-│   │   ├── base_class.py       # Base class for DB models
+│   │   ├── create_tables.sql   # sql script to create the DB and tables in SQL
+│   │   ├── migrate_json_to_sql.py   # python script to migrate the JSON to SQL
+│   │   ├── pokemon_queries.py  # SQL queries related to pokemon
+│   │   ├── trainer_queries.py  # SQL queries related to trainer
 │   │   ├── database.py         # Database session management
-│   │   └── models.py           # SQLAlchemy models
+│   │   └── pokemon_data.json   # source of local data
 │   │
 │   ├── /schemas                # Pydantic schemas for request/response validation
-│   │   └── pokemon.py          # Pokémon schemas
+│   │   ├── pokemon.py          # Pokémon schemas
+│   │   └── trainer.py          # Trainer schemas
 │   │
 │   └── main.py                 # FastAPI application creation and configuration
 │
