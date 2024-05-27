@@ -7,12 +7,9 @@ from ...schemas.pokemon import Pokemon
 
 router = APIRouter()
 
-@router.get("/by-type/{type_name}", response_model=List[Pokemon], tags=["Pokemon"])
-def read_pokemons_by_type(type_name: str, db: PokemonDB = Depends(get_db_connection)):
-    """
-    Endpoint to retrieve all Pokémon of a specified type.
-    """
+@router.get("/by-type/{type_name}")
+def read_pokemon_by_type(type_name: str, db=Depends(get_db_connection)):
     pokemons = get_pokemons_by_type(db, type_name)
     if not pokemons:
-        raise HTTPException(status_code=404, detail="Pokémon not found")
+        raise HTTPException(status_code=404, detail="No Pokémon found with the given type")
     return pokemons
