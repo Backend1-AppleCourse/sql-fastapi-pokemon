@@ -38,7 +38,7 @@ $response.StatusCode
 
 to add pokemon:
 # Define the URI of your FastAPI endpoint       
-$uri = 'http://localhost:8000/api/v1/pokemon/create-pokemon/'
+$uri = 'http://localhost:8000/api/v1/pokemon/pokemon/'
 
 # Create a hashtable for the headers, specifying that the content type is JSON
 $headers = @{
@@ -68,3 +68,27 @@ http://localhost:8000/api/v1/trainer/by-pokemon/pikachu
 
 http://localhost:8000/api/v1/pokemon/by-trainer-name/James
 
+---------------------------------------------------------------------------------
+evolve:
+# Define the URI of the FastAPI endpoint
+$uri = "http://localhost:8000/api/v1/trainer/evolve-pokemon/"
+
+# Create a hashtable for the headers, specifying that the content type is JSON
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
+# Define your JSON payload as a PowerShell object and convert it to a JSON string
+$body = @{
+    trainer_name = "James"
+    pokemon_name = "pikachu"
+} | ConvertTo-Json
+
+# Send a POST request using Invoke-WebRequest
+try {
+    $response = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $body
+    $response.StatusCode
+    $response.Content
+} catch {
+    Write-Host "Error: $($_.Exception.Message)"
+}

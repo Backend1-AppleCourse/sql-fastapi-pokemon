@@ -9,3 +9,6 @@ def get_trainers_by_pokemon_name(db: PokemonDB, pokemon_name: str):
 
 def add_pokemon_to_trainer_by_name(db: PokemonDB, trainer_name: str, pokemon_name: str):
     db.add_pokemon_to_trainer_by_name(trainer_name, pokemon_name)
+
+def evolve_pokemon(db: PokemonDB, trainer_name: str, pokemon_name: str):
+    db.evolve_pokemon(trainer_name, pokemon_name)

@@ -1,7 +1,8 @@
 # database.py
+import requests
 import pymysql
 from .pokemon_queries import get_pokemon_by_type_query, get_pokemons_by_trainer_name_query, delete_pokemon_of_trainer_query
-from .trainer_queries import get_trainers_by_pokemon_name_query, add_pokemon_to_trainer_by_name_query
+from .trainer_queries import get_trainers_by_pokemon_name_query, add_pokemon_to_trainer_by_name_query, update_ownership_query, add_evolved_pokemon_query, check_ownership_query
 from ..schemas.pokemon import PokemonCreate
 
 class PokemonDB:
@@ -52,6 +53,61 @@ class PokemonDB:
             self.connection.commit()
             if cursor.rowcount == 0:
                 raise ValueError("This Pokémon is already assigned to this trainer or the names are incorrect.")
+
+    def evolve_pokemon(self, trainer_name: str, pokemon_name: str):
+        with self.connection.cursor() as cursor:
+            # Check ownership
+            cursor.execute(check_ownership_query(), (trainer_name, pokemon_name))
+            result = cursor.fetchone()
+            if result['count'] == 0:
+                raise ValueError("Trainer does not own this Pokémon or Pokémon does not exist.")
+            
+            # Get evolution details from external API
+            response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_name.lower()}/")
+            response.raise_for_status()
+            species_data = response.json()
+            evolution_chain_url = species_data['evolution_chain']['url']
+
+            evolution_chain_response = requests.get(evolution_chain_url)
+            evolution_chain_response.raise_for_status()
+            evolution_chain_data = evolution_chain_response.json()
+
+            evolved_pokemon_name = self.find_evolved_pokemon(evolution_chain_data, pokemon_name.lower())
+            if not evolved_pokemon_name:
+                raise ValueError("No evolution found for this Pokémon.")
+
+            # Get evolved Pokémon details from external API
+            evolved_pokemon_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{evolved_pokemon_name}/")
+            evolved_pokemon_response.raise_for_status()
+            evolved_pokemon_data = evolved_pokemon_response.json()
+
+            evolved_pokemon_id = evolved_pokemon_data['id']
+            evolved_pokemon_height = evolved_pokemon_data['height']
+            evolved_pokemon_weight = evolved_pokemon_data['weight']
+
+            # Add evolved Pokémon to the database
+            cursor.execute(add_evolved_pokemon_query(), (evolved_pokemon_id, evolved_pokemon_name, evolved_pokemon_height, evolved_pokemon_weight))
+            self.connection.commit()
+
+            # Update ownership
+            cursor.execute(update_ownership_query(), (evolved_pokemon_id, trainer_name, pokemon_name))
+            self.connection.commit()
+
+    def find_evolved_pokemon(self, evolution_chain, current_pokemon):
+        chain = evolution_chain['chain']
+        return self.traverse_evolution_chain(chain, current_pokemon)
+
+    def traverse_evolution_chain(self, chain, current_pokemon):
+        if chain['species']['name'] == current_pokemon:
+            if chain['evolves_to']:
+                return chain['evolves_to'][0]['species']['name']
+            else:
+                return None
+        for evolution in chain['evolves_to']:
+            result = self.traverse_evolution_chain(evolution, current_pokemon)
+            if result:
+                return result
+        return None
 
 def get_db_connection():
     connection_params = {

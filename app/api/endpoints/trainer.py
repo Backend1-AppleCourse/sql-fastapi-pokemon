@@ -1,8 +1,8 @@
-
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from ...db.database import PokemonDB, get_db_connection
-from ...crud.trainer_crud import get_trainers_by_pokemon_name, add_pokemon_to_trainer_by_name
+from ...crud.trainer_crud import get_trainers_by_pokemon_name, add_pokemon_to_trainer_by_name, evolve_pokemon
 from ...schemas.trainer import TrainerPokemonRequest, TrainerPokemonResponse  # Assuming you have a schema for this
 
 router = APIRouter()
@@ -26,4 +26,20 @@ def api_add_pokemon_to_trainer(data: TrainerPokemonRequest, db=Depends(get_db_co
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        raise HTTPException(status_code=500, detail="Server error")
+
+@router.post("/evolve-pokemon/", response_model=TrainerPokemonResponse, status_code=201)
+def api_evolve_pokemon(data: TrainerPokemonRequest, db=Depends(get_db_connection)):
+    try:
+        evolve_pokemon(db, data.trainer_name, data.pokemon_name)
+        return {
+            "message": "Pokémon successfully evolved",
+            "trainer_name": data.trainer_name,
+            "pokemon_name": data.pokemon_name
+        }
+    except ValueError as e:
+        logging.error(f"ValueError: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logging.error(f"Unhandled Exception: {e}")
         raise HTTPException(status_code=500, detail="Server error")

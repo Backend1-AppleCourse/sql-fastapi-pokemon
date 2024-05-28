@@ -19,3 +19,27 @@ def add_pokemon_to_trainer_by_name_query():
     );
     """
 
+def check_ownership_query():
+    return """
+    SELECT COUNT(*) as count
+    FROM Ownerships o
+    JOIN Trainers t ON o.TrainerID = t.ID
+    JOIN Pokemons p ON o.PokemonID = p.ID
+    WHERE t.Name = %s AND p.Name = %s;
+    """
+
+def add_evolved_pokemon_query():
+    return """
+    INSERT INTO Pokemons (ID, Name, Height, Weight) VALUES (%s, %s, %s, %s)
+    ON DUPLICATE KEY UPDATE Name=VALUES(Name), Height=VALUES(Height), Weight=VALUES(Weight);
+    """
+
+def update_ownership_query():
+    return """
+    UPDATE Ownerships o
+    JOIN Trainers t ON o.TrainerID = t.ID
+    JOIN Pokemons p ON o.PokemonID = p.ID
+    SET o.PokemonID = %s
+    WHERE t.Name = %s AND p.Name = %s;
+    """
+
