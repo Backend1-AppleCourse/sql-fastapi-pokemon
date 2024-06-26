@@ -1,9 +1,9 @@
 # database.py
 import requests
 import pymysql
-from .pokemon_queries import get_pokemon_by_type_query, get_pokemons_by_trainer_name_query, delete_pokemon_of_trainer_query
-from .trainer_queries import get_trainers_by_pokemon_name_query, add_pokemon_to_trainer_by_name_query, update_ownership_query, add_evolved_pokemon_query, check_ownership_query
-from ..schemas.pokemon import PokemonCreate
+from app.DB.pokemon_queries import get_pokemon_by_type_query, get_pokemons_by_trainer_name_query, delete_pokemon_of_trainer_query
+from app.DB.trainer_queries import get_trainers_by_pokemon_name_query, add_pokemon_to_trainer_by_name_query, update_ownership_query, add_evolved_pokemon_query, check_ownership_query
+from app.schemas.pokemon import PokemonCreate
 
 class PokemonDB:
     def __init__(self, connection):
@@ -113,8 +113,8 @@ def get_db_connection():
     connection_params = {
         'host': 'localhost',
         'port': 3000,
-        'user': 'developer',
-        'password': 'html4826',
+        'user': 'root',
+        'password': '123456789',
         'database': 'pokemon_data',
         'cursorclass': pymysql.cursors.DictCursor
     }

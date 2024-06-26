@@ -1,7 +1,7 @@
 import logging
 from fastapi import FastAPI
-from app.api.endpoints import pokemon  # Adjust the import path based on your project structure
-from app.api.endpoints import trainer  # Adjust the import path based on your project structure
+from app.api.endpoints import pokemon
+from app.api.endpoints import trainer
 
 logging.basicConfig(level=logging.INFO)
 

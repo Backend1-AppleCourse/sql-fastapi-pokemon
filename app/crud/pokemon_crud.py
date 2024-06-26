@@ -1,7 +1,7 @@
 
 # pokemon_crud.py
-from ..db.database import PokemonDB
-from ..schemas.pokemon import PokemonCreate
+from app.DB.database import PokemonDB
+from app.schemas.pokemon import PokemonCreate
 
 def get_pokemons_by_type(db: PokemonDB, type_name: str):
     """Retrieve all pokemons by their type."""

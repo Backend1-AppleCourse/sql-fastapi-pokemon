@@ -6,8 +6,8 @@ import traceback  # Import the traceback module
 def get_db_connection():
     return pymysql.connect(host='localhost',
                            port=3000,
-                           user='developer',
-                           password='html4826',
+                           user='root',
+                           password='123456789',
                            db='pokemon_data',
                            cursorclass=pymysql.cursors.DictCursor)
 

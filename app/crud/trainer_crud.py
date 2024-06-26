@@ -1,6 +1,6 @@
 
 # pokemon_crud.py
-from ..db.database import PokemonDB
+from app.DB.database import PokemonDB
 
 def get_trainers_by_pokemon_name(db: PokemonDB, pokemon_name: str):
     """Retrieve all pokemons by their type."""

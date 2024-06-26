@@ -1,9 +1,9 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from ...db.database import PokemonDB, get_db_connection
-from ...crud.trainer_crud import get_trainers_by_pokemon_name, add_pokemon_to_trainer_by_name, evolve_pokemon
-from ...schemas.trainer import TrainerPokemonRequest, TrainerPokemonResponse  # Assuming you have a schema for this
+from app.DB.database import PokemonDB, get_db_connection
+from app.crud.trainer_crud import get_trainers_by_pokemon_name, add_pokemon_to_trainer_by_name, evolve_pokemon
+from app.schemas.trainer import TrainerPokemonRequest, TrainerPokemonResponse  # Assuming you have a schema for this
 
 router = APIRouter()
 
