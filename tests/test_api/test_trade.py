@@ -3,7 +3,8 @@ import sys
 import os
 import pytest
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Ensure the main app is importable
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from main import app
 
 client = TestClient(app)
