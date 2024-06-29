@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  public-api:
+    build:
+      context: .
+    container_name: public-api-container
+    ports:
+      - "8001:8001"
+    environment:
+      FASTAPI_HOST: fastapi-container
+      FASTAPI_PORT: 8000
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: html4826
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      
+  python:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: html4826
+      MYSQL_DATABASE: pokemon_data
+    command: >
+      bash -c "
+      python wait_for_mysql.py && python migrate_json_to_sql.py
+      "
+
+volumes:
+  mysql-data:

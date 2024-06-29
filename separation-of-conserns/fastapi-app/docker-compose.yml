@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+    container_name: fastapi-container
+    ports:
+      - "8000:8000"
+    environment:
+      MYSQL_HOST: 172.27.0.2
+      MYSQL_PORT: 3306
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: html4826
+      MYSQL_DATABASE: pokemon_data
+    networks:
+      - sql-docker_default
+      - backend_network
+
+networks:
+  sql-docker_default:
+    external:
+      name: sql-docker_default
+  backend_network:
+    external: true

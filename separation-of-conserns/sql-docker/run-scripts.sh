@@ -1,0 +1,2 @@
+python wait_for_mysql.py
+python migrate_json_to_sql.py
